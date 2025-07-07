@@ -16,11 +16,11 @@ end
 validateCredit()
 
 local idleTime = 0
-local idleThreshold = 60 -- seconds until idle triggers
+local idleThreshold = 30 -- seconds until idle triggers
 local animDict = "move_m@generic_idles@std"
 local animNames = {"idle_a", "idle_b", "idle_c", "idle_d"}
 local isIdlePlaying = false
-local checkInterval = 1000 -- 1 second idle check
+local checkInterval = 500 -- 1 second idle check
 local inputCheckInterval = 200 -- E key press check
 
 -- Load animation dictionary efficiently
