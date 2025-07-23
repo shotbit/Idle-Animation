@@ -21,7 +21,7 @@ local animDict = "move_m@generic_idles@std"
 local animNames = {"idle_a", "idle_b", "idle_c", "idle_d"}
 local isIdlePlaying = false
 local checkInterval = 500 -- 1 second idle check
-local inputCheckInterval = 200 -- E key press check
+local animationEnabled = true -- Flag to control animation state
 
 -- Load animation dictionary efficiently
 local function loadAnimDict(dict)
@@ -35,7 +35,7 @@ end
 
 -- Play a random idle animation
 local function playIdleAnimation()
-    if isIdlePlaying then return end
+    if isIdlePlaying or not animationEnabled then return end
     local ped = PlayerPedId()
     loadAnimDict(animDict)
     local anim = animNames[math.random(#animNames)]
@@ -45,9 +45,10 @@ end
 
 -- Stop the idle animation
 local function stopIdleAnimation()
-    if not isIdlePlaying then return end
-    ClearPedTasks(PlayerPedId())
-    isIdlePlaying = false
+    if isIdlePlaying then
+        ClearPedTasks(PlayerPedId())
+        isIdlePlaying = false
+    end
 end
 
 -- Check for any keyboard input
@@ -69,7 +70,7 @@ CreateThread(function()
             idleTime = 0
             stopIdleAnimation()
         else
-            idleTime += 1
+            idleTime = idleTime + 1
             if idleTime >= idleThreshold then
                 playIdleAnimation()
             end
@@ -77,17 +78,14 @@ CreateThread(function()
     end
 end)
 
--- Listen for the E key (INPUT_PICKUP) only when idle animation is active
-CreateThread(function()
-    while true do
-        if isIdlePlaying then
-            Wait(inputCheckInterval)
-            if IsControlJustPressed(0, 38) then -- E key
-                stopIdleAnimation()
-                idleTime = 0
-            end
-        else
-            Wait(1000)
-        end
-    end
-end)
+-- Command to toggle animation on and off
+RegisterCommand("animationoff", function()
+    animationEnabled = false
+    stopIdleAnimation()
+    print("Idle animation has been turned off.")
+end, false)
+
+RegisterCommand("animationon", function()
+    animationEnabled = true
+    print("Idle animation has been turned on.")
+end, false)
