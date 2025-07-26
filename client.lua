@@ -4,23 +4,15 @@ local function validateCredit()
     print("^2[IdleAnim]^7 Made by Shotbit")
 end
 
-local expectedDump = string.dump(function()
-    print("Made by Shotbit")
-    print("^2[IdleAnim]^7 Made by Shotbit")
-end)
-
-if string.dump(validateCredit) ~= expectedDump then
-    error("Tampering detected. Resource will not run.")
-end
-
+-- Call to validate credit (kept for credit display)
 validateCredit()
 
 local idleTime = 0
-local idleThreshold = 30 -- seconds until idle triggers
+local idleThreshold = 10 -- seconds until idle triggers
 local animDict = "move_m@generic_idles@std"
 local animNames = {"idle_a", "idle_b", "idle_c", "idle_d"}
 local isIdlePlaying = false
-local checkInterval = 500 -- 1 second idle check
+local checkInterval = 300 -- 1 second idle check
 local animationEnabled = true -- Flag to control animation state
 
 -- Load animation dictionary efficiently
